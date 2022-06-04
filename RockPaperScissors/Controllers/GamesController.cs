@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RockPaperScissors.Models;
+using RockPaperScissors.Services;
 
 namespace RockPaperScissors.Controllers
 {
@@ -13,21 +14,18 @@ namespace RockPaperScissors.Controllers
     [ApiController]
     public class GamesController : ControllerBase
     {
-        private readonly GamesContext _context;
+        private readonly IGameService _gameService;
 
-        public GamesController(GamesContext context)
+        public GamesController(IGameService gameService)
         {
-            _context = context;
+            _gameService = gameService;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Game>> GetGame(Guid id)
         {
-          if (_context.Games == null)
-          {
-              return NotFound();
-          }
-            var game = await _context.Games.FindAsync(id);
+            //se till att retunera state och vilka som spelar
+            var game = await _gameService.GetGameAsync(id).ConfigureAwait(false);
 
             if (game == null)
             {
@@ -37,8 +35,25 @@ namespace RockPaperScissors.Controllers
             return game;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Game>> CreateGame([FromBody] string name)
+        {
+            if(string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Please enter a name for player one");
+            }
+            if (!_gameService.ValidGamesContext())
+            {
+                return Problem("Entity set 'GameContext.Games' is null.");
+            }
+
+            var id = await _gameService.CreateNewGame(name).ConfigureAwait(false);
+
+            return CreatedAtAction("GetGame", new { id = id });
+        }
+
         [HttpPost("{id}/join")]
-        public async Task<IActionResult> JoinGame(Guid id, Game game)
+        public async Task<IActionResult> JoinGame(Guid id, [FromBody] string name)
         {
             if (id != game.Id)
             {
@@ -66,37 +81,31 @@ namespace RockPaperScissors.Controllers
             return NoContent();
         }
 
-        // POST: api/Game
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Game>> PostGame(Game game)
+        [HttpPost("{id}/move")]
+        public async Task<IActionResult> MakeGameMove(Guid id, Game game)
         {
-          if (_context.Games == null)
-          {
-              return Problem("Entity set 'GameContext.Games'  is null.");
-          }
-            _context.Games.Add(game);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetGame", new { id = game.Id }, game);
-        }
-
-        // DELETE: api/Game/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGame(Guid id)
-        {
-            if (_context.Games == null)
+            if (id != game.Id)
             {
-                return NotFound();
-            }
-            var game = await _context.Games.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
+                return BadRequest();
             }
 
-            _context.Games.Remove(game);
-            await _context.SaveChangesAsync();
+            _context.Entry(game).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GameExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
