@@ -38,7 +38,7 @@ namespace RockPaperScissors.Controllers
             if(string.IsNullOrEmpty(name)) return BadRequest("Please enter a name for player one");
 
             var response = await _gameService.CreateNewGame(name).ConfigureAwait(false);
-            if(!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
+            if(!string.IsNullOrEmpty(response.ErrorInfo)) return BadRequest(response.ErrorInfo);
 
             return CreatedAtAction("CreateGame", new { id = response.Id });
         }
@@ -49,7 +49,7 @@ namespace RockPaperScissors.Controllers
             if (id == Guid.Empty || string.IsNullOrEmpty(name)) return BadRequest("Please check that you entered the ID and the name of the player");
 
             var response = await _gameService.JoinGameAsync(id, name);
-            if (!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
+            if (!string.IsNullOrEmpty(response.ErrorInfo)) return BadRequest(response.ErrorInfo);
             return Ok(response);
 
         }

@@ -10,7 +10,7 @@ namespace RockPaperScissors.Models
         }
 
         public DbSet<Game> Games { get; set; } = null!;
-        public DbSet<Player> Player { get; set; } = null!;
+        public DbSet<Player> Players { get; set; } = null!;
         public DbSet<Result> Results { get; set; } = null!;
     }
 }

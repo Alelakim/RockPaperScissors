@@ -3,8 +3,9 @@
     public class Game
     {
         public Guid Id { get; set; }
-        public List<Player> Players { get; set; }
-        public Result Result { get; set; }
+        public string Name { get; set; }
+        public List<Player>? Players { get; set; }
+        public Result? Result { get; set; }
 
 
     }
