@@ -22,68 +22,40 @@ namespace RockPaperScissors.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGame(Guid id)
+        public async Task<ActionResult<GameResponse>> GetGame(Guid id)
         {
-            //se till att retunera state och vilka som spelar
+            //se till att retunera state (eller bara resultat med info?) och vilka som spelar
             var game = await _gameService.GetGameAsync(id).ConfigureAwait(false);
 
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            return game;
+            if (game == null) return NotFound();
+            return Ok(game);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Game>> CreateGame([FromBody] string name)
+        public async Task<ActionResult<GameResponse>> CreateGame([FromBody] string name)
         {
-            if(string.IsNullOrEmpty(name))
-            {
-                return BadRequest("Please enter a name for player one");
-            }
-            if (!_gameService.ValidGamesContext())
-            {
-                return Problem("Entity set 'GameContext.Games' is null.");
-            }
+            if(string.IsNullOrEmpty(name)) return BadRequest("Please enter a name for player one");
 
-            var id = await _gameService.CreateNewGame(name).ConfigureAwait(false);
+            var response = await _gameService.CreateNewGame(name).ConfigureAwait(false);
+            if(!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
 
-            return CreatedAtAction("GetGame", new { id = id });
+            return CreatedAtAction("GetGame", new { id = response.Id });
         }
 
         [HttpPost("{id}/join")]
         public async Task<IActionResult> JoinGame(Guid id, [FromBody] string name)
         {
-            if (id != game.Id)
-            {
-                return BadRequest();
-            }
+            if (string.IsNullOrEmpty(name) || id == Guid.Empty) return BadRequest("Please check that you entered the ID and the name of the player");
 
-            _context.Entry(game).State = EntityState.Modified;
+            var response = await _gameService.JoinGameAsync(id, name);
+            if (!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
+            return Ok(response);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         [HttpPost("{id}/move")]
-        public async Task<IActionResult> MakeGameMove(Guid id, Game game)
-        {
+        public async Task<IActionResult> MakeAMove(Guid id, [FromBody] string move, [FromBody] string name)
+        { 
             if (id != game.Id)
             {
                 return BadRequest();
