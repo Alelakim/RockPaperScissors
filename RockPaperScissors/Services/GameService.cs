@@ -5,13 +5,15 @@ using System.Net;
 
 namespace RockPaperScissors.Services
 {
-    public class GameService
+    public class GameService : IGameService
     {
         private readonly GamesContext _context;
+        private readonly IRockPaperScissorService _rockPaperScissorService;
 
-        public GameService(GamesContext context)
+        public GameService(GamesContext context, IRockPaperScissorService rockPaperScissorService)
         {
             _context = context;
+            _rockPaperScissorService = rockPaperScissorService;
         }
 
         public async Task<GameResponse?> GetGameAsync(Guid id)
@@ -30,8 +32,8 @@ namespace RockPaperScissors.Services
         public async Task<GameResponse> CreateNewGame(string name)
         {
             if (!ValidGamesContext()) return new GameResponse { errorInfo = "No valid context" };
-            var game = new Game { Id = Guid.NewGuid() };
-            game.Players.Add(new Player { Name = name });
+            var game = new Game { Id = Guid.NewGuid(), Players = new List<Player>() { new Player { Name = name, Move = "" } } };
+           // game.Players.Add(new Player { Name = name });
 
             _context.Games.Add(game);
             await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -58,6 +60,34 @@ namespace RockPaperScissors.Services
             }
 
             return new GameResponse { Id = game.Id, Players = game.Players.Select(x => x.Name).ToList() };
+        }
+
+        public async Task<GameResponse> MakeAMoveAsync(Guid id, string name, string move)
+        {
+            if (!ValidGamesContext()) return new GameResponse { errorInfo = "No valid context" };
+            if (!GameExists(id)) return new GameResponse { errorInfo = "The game you are trying to join does not exist" };
+
+            var game = await _context.Games.FindAsync(id);
+            if (!game.Players.Any(x => x.Name.ToLower().Equals(name.ToLower()))) return new GameResponse { errorInfo = name + " is not at player of the game" };
+
+            game.Players.Where(x => x.Name.ToLower().Equals(name.ToLower())).Select(y => y.Move = move);
+
+            if (game.Players.Any(x => !string.IsNullOrEmpty(x.Move)))
+            {
+                game.Result = _rockPaperScissorService.RunGame(game.Players);
+            }
+            _context.Entry(game).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return new GameResponse { Id = id, Players = game.Players.Select(x => x.Name).ToList(), Result = game.Result };
+
         }
 
         public bool ValidGamesContext()

@@ -1,4 +1,6 @@
-﻿namespace RockPaperScissors.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RockPaperScissors.Models
 {
     public class Player
     {

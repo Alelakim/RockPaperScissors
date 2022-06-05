@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using RockPaperScissors.Models;
 using RockPaperScissors.Services;
 
@@ -39,13 +40,13 @@ namespace RockPaperScissors.Controllers
             var response = await _gameService.CreateNewGame(name).ConfigureAwait(false);
             if(!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
 
-            return CreatedAtAction("GetGame", new { id = response.Id });
+            return CreatedAtAction("CreateGame", new { id = response.Id });
         }
 
         [HttpPost("{id}/join")]
         public async Task<IActionResult> JoinGame(Guid id, [FromBody] string name)
         {
-            if (string.IsNullOrEmpty(name) || id == Guid.Empty) return BadRequest("Please check that you entered the ID and the name of the player");
+            if (id == Guid.Empty || string.IsNullOrEmpty(name)) return BadRequest("Please check that you entered the ID and the name of the player");
 
             var response = await _gameService.JoinGameAsync(id, name);
             if (!string.IsNullOrEmpty(response.errorInfo)) return BadRequest(response.errorInfo);
@@ -54,37 +55,15 @@ namespace RockPaperScissors.Controllers
         }
 
         [HttpPost("{id}/move")]
-        public async Task<IActionResult> MakeAMove(Guid id, [FromBody] string move, [FromBody] string name)
-        { 
-            if (id != game.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(game).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        private bool GameExists(Guid id)
+        public async Task<IActionResult> MakeAMove(Guid id, string json)
         {
-            return (_context.Games?.Any(e => e.Id == id)).GetValueOrDefault();
+            var jsonBody = JObject.Parse(json);
+            var name = "";
+            var move = "";
+            if (id == Guid.Empty || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(move)) return BadRequest("Please check that you entered the ID, your name and your move");
+
+            var response = _gameService.MakeAMoveAsync(id, name, move);
+            return Ok(response);
         }
     }
 }

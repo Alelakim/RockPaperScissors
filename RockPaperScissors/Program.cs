@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RockPaperScissors.Models;
+using RockPaperScissors.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<GamesContext>(opt =>
     opt.UseInMemoryDatabase("Game"));
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IRockPaperScissorService, RockPaperScissorService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
