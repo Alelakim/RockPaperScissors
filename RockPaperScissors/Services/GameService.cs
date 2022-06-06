@@ -47,7 +47,7 @@ namespace RockPaperScissors.Services
         {
             var game = _gameRepository.Find(id);
             if (game == null) return new GameResponse { ErrorInfo = "The game you are trying to join does not exist" };
-            if (!move.ToLower().Equals("rock") || !move.ToLower().Equals("paper") || !move.ToLower().Equals("scissors")) return new GameResponse { ErrorInfo = "Mind your spelling and please enter a correct move: Rock, Paper or Sciccors" };
+         // <fixa   if (!move.ToLower().Equals("rock") || !move.ToLower().Equals("paper") || !move.ToLower().Equals("scissors")) return new GameResponse { ErrorInfo = "Mind your spelling and please enter a correct move: Rock, Paper or Sciccors" };
             if (!game.Players.Any(x => x.Name.ToLower().Equals(name.ToLower()))) return new GameResponse { ErrorInfo = name + " is not at player of the game" };
 
             game.Players.Where(x => x.Name.ToLower().Equals(name.ToLower())).FirstOrDefault().Move = move;

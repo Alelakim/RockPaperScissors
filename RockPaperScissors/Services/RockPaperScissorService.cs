@@ -17,6 +17,7 @@ namespace RockPaperScissors.Services
             //var result = playerOne.Move.ToLower() switch
             //{
             //"rock" => if (playerTwo.Move.ToLower().Equals("rock")) { return new Result { Draw = true }; }
+            //FIXA SWITCH SOM NYARE?
 
             switch (playerOne.Move.ToLower())
 
