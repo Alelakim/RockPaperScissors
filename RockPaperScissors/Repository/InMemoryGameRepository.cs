@@ -1,6 +1,6 @@
 ﻿namespace RockPaperScissors.Models
 {
-    public class GameMapper : IGameRepository
+    public class InMemoryGameRepository : IGameRepository
     {
         public static Dictionary<Guid, Game> _games = new Dictionary<Guid, Game>();
 

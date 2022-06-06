@@ -14,13 +14,7 @@ namespace RockPaperScissors.Services
             var playerOne = players[0];
             var playerTwo = players[1];
 
-            //var result = playerOne.Move.ToLower() switch
-            //{
-            //"rock" => if (playerTwo.Move.ToLower().Equals("rock")) { return new Result { Draw = true }; }
-            //FIXA SWITCH SOM NYARE?
-
             switch (playerOne.Move.ToLower())
-
             {
                 case "rock":
                     if (playerTwo.Move.ToLower().Equals("rock"))
@@ -37,55 +31,34 @@ namespace RockPaperScissors.Services
                     }
 
                 case "paper":
-
                     if (playerTwo.Move.ToLower().Equals("rock"))
-
                     {
                         return new Result { Winner = playerOne, Loser = playerTwo };
-
                     }
-
                     else if (playerTwo.Move.ToLower().Equals("paper"))
-
                     {
                         return new Result { Draw = true };
-
                     }
-
                     else
-
                     {
                         return new Result { Winner = playerTwo, Loser = playerOne };
-
                     }
-
                 case "scissors":
-
                     if (playerTwo.Move.ToLower().Equals("rock"))
-
                     {
                         return new Result { Winner = playerTwo, Loser = playerOne };
-
                     }
-
                     else if (playerTwo.Move.ToLower().Equals("paper"))
-
                     {
                         return new Result { Winner = playerOne, Loser = playerTwo };
-
                     }
-
                     else
-
                     {
                         return new Result { Draw = true };
-
                     }
 
                 default:
-
                     return null;
-
             }
 
 

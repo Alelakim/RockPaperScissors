@@ -28,7 +28,7 @@ namespace RockPaperScissors.Services
             var game = new Game { GameId = Guid.NewGuid(), Players = new List<Player>() { new Player { Name = name } } };
             _gameRepository.AddGame(game);
 
-            return new GameResponse { Id = game.GameId };
+            return new GameResponse { Id = game.GameId, Players = game.Players.Select(x => x.Name).ToList() };
         }
        
         public GameResponse JoinGame(Guid id, string name)
@@ -46,21 +46,23 @@ namespace RockPaperScissors.Services
         public GameResponse MakeAMove(Guid id, string name, string move)
         {
             var game = _gameRepository.Find(id);
+
             if (game == null) return new GameResponse { ErrorInfo = "The game you are trying to join does not exist" };
-         // <fixa   if (!move.ToLower().Equals("rock") || !move.ToLower().Equals("paper") || !move.ToLower().Equals("scissors")) return new GameResponse { ErrorInfo = "Mind your spelling and please enter a correct move: Rock, Paper or Sciccors" };
             if (!game.Players.Any(x => x.Name.ToLower().Equals(name.ToLower()))) return new GameResponse { ErrorInfo = name + " is not at player of the game" };
-
-            game.Players.Where(x => x.Name.ToLower().Equals(name.ToLower())).FirstOrDefault().Move = move;
-
-            if (game.Players.Count == 2 && game.Players.All(x => !string.IsNullOrEmpty(x.Move)))
+            if (move.ToLower().Equals("rock") || move.ToLower().Equals("paper") || move.ToLower().Equals("scissors"))
             {
-                game.Result = _rockPaperScissorService.RunGame(game.Players);
+                game.Players.Where(x => x.Name.ToLower().Equals(name.ToLower())).FirstOrDefault().Move = move;
+
+                if (game.Players.Count == 2 && game.Players.All(x => !string.IsNullOrEmpty(x.Move)))
+                {
+                    game.Result = _rockPaperScissorService.RunGame(game.Players);
+                }
+
+                _gameRepository.UpdateGame(game);
+
+                return new GameResponse { Id = id, Players = game.Players.Select(x => x.Name).ToList(), Result = game.Result };
             }
-
-            _gameRepository.UpdateGame(game);
-
-            return new GameResponse { Id = id, Players = game.Players.Select(x => x.Name).ToList(), Result = game.Result };
-
+            return new GameResponse { ErrorInfo = "Mind your spelling and please enter a correct move: Rock, Paper or Sciccors" };
         }
 
     }
