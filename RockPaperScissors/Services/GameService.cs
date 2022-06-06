@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RockPaperScissors.Models;
-using System.Net;
 
 namespace RockPaperScissors.Services
 {

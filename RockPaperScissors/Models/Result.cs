@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RockPaperScissors.Models
+﻿namespace RockPaperScissors.Models
 {
     public class Result
     {
