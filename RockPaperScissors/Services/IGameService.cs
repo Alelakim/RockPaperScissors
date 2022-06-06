@@ -4,9 +4,9 @@ namespace RockPaperScissors.Services
 {
     public interface IGameService
     {
-        GameResponse GetGameAsync(Guid id);
+        GameResponse GetGame(Guid id);
         GameResponse CreateNewGame(string name);
-        GameResponse JoinGameAsync(Guid id, string name);
-        GameResponse MakeAMoveAsync(Guid id, string name, string move);
+        GameResponse JoinGame(Guid id, string name);
+        GameResponse MakeAMove(Guid id, string name, string move);
     }
 }

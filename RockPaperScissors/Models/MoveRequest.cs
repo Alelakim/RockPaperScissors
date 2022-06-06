@@ -1,9 +1,8 @@
 ﻿namespace RockPaperScissors.Models
 {
-    public class Player
+    public class MoveRequest
     {
-        public string? Name { get; set; }
+        public string? PlayersName { get; set; }
         public string? Move { get; set; }
-
     }
 }
