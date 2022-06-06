@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IRockPaperScissorService, RockPaperScissorService>();
+builder.Services.AddScoped<IGameRepository, GameMapper>();
 builder.Services.AddDbContext<GamesContext>(opt =>
     opt.UseInMemoryDatabase("Game"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

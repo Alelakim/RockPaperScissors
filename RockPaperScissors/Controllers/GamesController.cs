@@ -17,46 +17,47 @@ namespace RockPaperScissors.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameResponse>> GetGame(Guid id)
+        public ActionResult<GameResponse> GetGame(Guid id)
         {
             //se till att retunera state (eller bara resultat med info?) och vilka som spelar
-            var response = await _gameService.GetGameAsync(id).ConfigureAwait(false);
+            var response = _gameService.GetGameAsync(id);
 
             if (response == null) return NotFound();
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<GameResponse>> CreateGame([FromBody] string name)
+        //public async Task<ActionResult<GameResponse>> CreateGame([FromBody] string name)
+        public ActionResult<GameResponse> CreateGame([FromBody] string name)
         {
             if(string.IsNullOrEmpty(name)) return BadRequest("Please enter a name for player one");
 
-            var response = await _gameService.CreateNewGame(name).ConfigureAwait(false);
+            var response = _gameService.CreateNewGame(name);
             if(!string.IsNullOrEmpty(response.ErrorInfo)) return BadRequest(response.ErrorInfo);
 
             return CreatedAtAction("CreateGame", new { id = response.Id });
         }
 
         [HttpPost("{id}/join")]
-        public async Task<IActionResult> JoinGame(Guid id, [FromBody] string name)
+        public IActionResult JoinGame(Guid id, [FromBody] string name)
         {
             if (id == Guid.Empty || string.IsNullOrEmpty(name)) return BadRequest("Please check that you entered the ID and the name of the player");
 
-            var response = await _gameService.JoinGameAsync(id, name).ConfigureAwait(false);
+            var response = _gameService.JoinGameAsync(id, name);
             if (!string.IsNullOrEmpty(response.ErrorInfo)) return BadRequest(response.ErrorInfo);
             return Ok(response);
 
         }
 
         [HttpPost("{id}/move")]
-        public async Task<IActionResult> MakeAMove(Guid id, string json)
+        public IActionResult MakeAMove(Guid id, [FromBody] JObject json)
         {
-            var jsonBody = JObject.Parse(json);
+            var jsonBody = json;
             var name = "";
             var move = "";
             if (id == Guid.Empty || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(move)) return BadRequest("Please check that you entered the ID, your name and your move");
 
-            var response = await _gameService.MakeAMoveAsync(id, name, move).ConfigureAwait(false);
+            var response = _gameService.MakeAMoveAsync(id, name, move);
             return Ok(response);
         }
     }
