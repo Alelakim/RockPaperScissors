@@ -26,10 +26,10 @@ namespace RockPaperScissors.Controllers
         public async Task<ActionResult<GameResponse>> GetGame(Guid id)
         {
             //se till att retunera state (eller bara resultat med info?) och vilka som spelar
-            var game = await _gameService.GetGameAsync(id).ConfigureAwait(false);
+            var response = await _gameService.GetGameAsync(id).ConfigureAwait(false);
 
-            if (game == null) return NotFound();
-            return Ok(game);
+            if (response == null) return NotFound();
+            return Ok(response);
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace RockPaperScissors.Controllers
         {
             if (id == Guid.Empty || string.IsNullOrEmpty(name)) return BadRequest("Please check that you entered the ID and the name of the player");
 
-            var response = await _gameService.JoinGameAsync(id, name);
+            var response = await _gameService.JoinGameAsync(id, name).ConfigureAwait(false);
             if (!string.IsNullOrEmpty(response.ErrorInfo)) return BadRequest(response.ErrorInfo);
             return Ok(response);
 
@@ -62,7 +62,7 @@ namespace RockPaperScissors.Controllers
             var move = "";
             if (id == Guid.Empty || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(move)) return BadRequest("Please check that you entered the ID, your name and your move");
 
-            var response = _gameService.MakeAMoveAsync(id, name, move);
+            var response = await _gameService.MakeAMoveAsync(id, name, move).ConfigureAwait(false);
             return Ok(response);
         }
     }
