@@ -13,6 +13,6 @@ namespace RockPaperScissorsTests.ControllersTests
         //Men jag skulle väldigt gärna, om jag får möjligheten, prata med er om integrationstester och höra vad ni tycker om t ex den här artikeln:
         // https://timdeschryver.dev/blog/how-to-test-your-csharp-web-api
         //Jag har hittills endast jobbat med NUnit test så jag tycker även det var intressant att börja läsa på om XUnit tests som kom upp i och med att
-        //jag började läsa om integrationstester. Så mycket nytt och roligt att testa franöver.
+        //jag började läsa om integrationstester, så det skulle jag också vilja prata om vilka för - och nackdelar det finns med varje.
     }
 }
