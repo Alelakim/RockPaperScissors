@@ -5,7 +5,12 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors", "RockPaperScissors\RockPaperScissors.csproj", "{60911992-6DF9-43B0-88A1-DDCEA4D61C00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissorsTests", "RockPaperScissorsTests\RockPaperScissorsTests.csproj", "{50DEE892-7DF7-4EB3-8AB2-DFD03C7905AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissorsTests", "RockPaperScissorsTests\RockPaperScissorsTests.csproj", "{50DEE892-7DF7-4EB3-8AB2-DFD03C7905AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C24CF7E5-E8AE-4D02-92AF-B3987B3F225D}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
