@@ -10,7 +10,7 @@ At the moment the data is not persisted, it is only in memory. But since the str
 In the next version the programming would be changed to run asynchronous, but for now it is synchronous.
 In the next version the testing would also be extended with integration test and further unit testing.
 
-##How to run the program
+## How to run the program
 Clone the project from github [Link](https://github.com/Alelakim/RockPaperScissors) to Visual Stuido OR if you have the files, open up the solution in Visual Studio 2019 (or higher)
 
 ## How to use the application
