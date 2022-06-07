@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RockPaperScissors.Models;
+using RockPaperScissors.Repository;
 using RockPaperScissors.Services;
 
 var builder = WebApplication.CreateBuilder(args);

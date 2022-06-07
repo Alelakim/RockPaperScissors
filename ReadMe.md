@@ -8,6 +8,10 @@ The application is written as .NetCoreApp v6.0 and you can run it from Visual St
 This is the first version and it is fairly simple. When creating this the focus was to get the strucutres in place. To make it easy to improve and scale in the future.
 At the moment the data is not persisted, it is only in memory. But since the structure is there you only have swap the InMemoryGameRepository to a Db-class to change that.
 In the next version the programming would be changed to run asynchronous, but for now it is synchronous.
+In the next version the testing would also be extended with integration test and further unit testing.
+
+##How to run the program
+Clone the project from github [Link](https://github.com/Alelakim/RockPaperScissors) to Visual Stuido OR if you have the files, open up the solution in Visual Studio 2019 (or higher)
 
 ## How to use the application
 You can only be two players and you must use different names. Example of game:

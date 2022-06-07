@@ -1,4 +1,6 @@
-﻿namespace RockPaperScissors.Models
+﻿using RockPaperScissors.Models;
+
+namespace RockPaperScissors.Repository
 {
     public interface IGameRepository
     {

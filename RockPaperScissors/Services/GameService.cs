@@ -1,4 +1,5 @@
 ﻿using RockPaperScissors.Models;
+using RockPaperScissors.Repository;
 
 namespace RockPaperScissors.Services
 {
@@ -47,7 +48,7 @@ namespace RockPaperScissors.Services
         {
             var game = _gameRepository.Find(id);
 
-            if (game == null) return new GameResponse { ErrorInfo = "The game you are trying to join does not exist" };
+            if (game == null) return new GameResponse { ErrorInfo = "The game you are trying to make move on does not exist" };
             if (!game.Players.Any(x => x.Name.ToLower().Equals(name.ToLower()))) return new GameResponse { ErrorInfo = name + " is not at player of the game" };
             if (move.ToLower().Equals("rock") || move.ToLower().Equals("paper") || move.ToLower().Equals("scissors"))
             {
