@@ -5,7 +5,7 @@ using RockPaperScissors.Services;
 
 namespace RockPaperScissors.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/games")]
     [ApiController]
     public class GamesController : ControllerBase
     {
